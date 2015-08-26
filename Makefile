@@ -1,10 +1,13 @@
-all: models util
+all: core_js models_js util_js
 
-core: ./*.coffee
+start: all
+	npm start
+
+core_js: ./*.coffee
 	coffee -cb ./*.coffee
 
-models: models/*.coffee
+models_js: models/*.coffee
 	coffee -cb models/*.coffee
 
-util: util/*.coffee
+util_js: util/*.coffee
 	coffee -cb util/*.coffee
