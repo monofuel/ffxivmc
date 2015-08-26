@@ -1,0 +1,24 @@
+﻿<Window x:Class="FFXIVMarketApp.Layout.MarketSearchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FFXIVMarketApp.Controls"
+        mc:Ignorable="d"
+        Title="Search for items" Height="300" Width="300">
+    <StackPanel>
+        <DockPanel>
+            <Border Width="63">
+                <TextBox
+                    Name="Item"/>
+            </Border>
+            <Button
+                Click="Button_Click">
+                <TextBlock
+                    Text="Search"/>
+            </Button>
+        </DockPanel>
+        <local:MarketOrderControl
+            x:Name="OrdersControl"/>
+    </StackPanel>
+</Window>
