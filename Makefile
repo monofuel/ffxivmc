@@ -3,8 +3,8 @@ all: models util
 core: ./*.coffee
 	coffee -cb ./*.coffee
 
-models: models/*
-	coffee -cb models/*
+models: models/*.coffee
+	coffee -cb models/*.coffee
 
-util: util/*
-	coffee -cb util/*
+util: util/*.coffee
+	coffee -cb util/*.coffee
