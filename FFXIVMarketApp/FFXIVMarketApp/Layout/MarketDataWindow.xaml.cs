@@ -27,6 +27,18 @@ namespace FFXIVMarketApp.Layout
         {
             InitializeComponent();
 
+            var PostButton = new Button();
+            var PostText = new TextBlock();
+            PostText.Text = "Post";
+            PostButton.Content = PostText;
+            PostButton.Click += (s,e) =>
+           {
+               var Orders = Market.GetItemOrders(Market.LastItem);
+               H.Post(Endpoints.MarketOrders(),Orders.ToJSON());
+           };
+
+            OrdersControl.MarketOrderDock.Children.Insert(0,PostButton);
+
             Closed += (s, e) =>
             {
                 Window = null;
@@ -35,8 +47,8 @@ namespace FFXIVMarketApp.Layout
             Action IntervalAction = () =>
             {
                 var Orders = Market.GetItemOrders(Market.LastItem);
-                OrdersControl.SetCollection(Orders);
-                L.WriteLine("Updating to " + Market.LastItem + " with " + Orders.Count + " Hits");
+                OrdersControl.SetCollection(Orders.List);
+                L.WriteLine("Updating to " + Market.LastItem + " with " + Orders.List.Count + " Hits");
             };
 
             Loaded += (s, e) =>
@@ -61,6 +73,11 @@ namespace FFXIVMarketApp.Layout
             {
                 Window.Focus();
             }
+        }
+
+        private void OrdersControl_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

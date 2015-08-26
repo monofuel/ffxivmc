@@ -40,8 +40,8 @@ namespace FFXIVMarketApp.MemoryScan
 
         private const int PROCESS_WM_READ = 0x0010;
 
-        private const int MARKET_PTR = 0x14D7F704;
-        private const int ITEM_SEARCH_PTR = 0x146390D4;
+        private const int MARKET_PTR = 0x0F640FE4;
+        private const int ITEM_SEARCH_PTR = 0x0F6417D0;
         private const int MARKET_MESSAGE_PTR = 0x31561E22;
         private const int ORDER_BASE = MARKET_PTR + 4;
         private const int QUANTITY_OFFSET = 4;

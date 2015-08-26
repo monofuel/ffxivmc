@@ -49,14 +49,14 @@ namespace FFXIVMarketApp.MarketData
             }, 500);
         }
 
-        public static List<MarketOrder> GetItemOrders(int Item)
+        public static MarketOrderList GetItemOrders(int Item)
         {
             lock(Orders)
             {
                 if (Orders.ContainsKey(Item))
-                    return Orders[Item].Orders;
+                    return Orders[Item];
                 else
-                    return new List<MarketOrder>();
+                    return new MarketOrderList();
             }
         }
 

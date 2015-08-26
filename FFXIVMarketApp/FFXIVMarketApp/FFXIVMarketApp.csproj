@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\json.net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -67,7 +70,10 @@
     <Compile Include="MarketData\Market.cs" />
     <Compile Include="MarketData\MarketOrder.cs" />
     <Compile Include="MarketData\MarketOrderList.cs" />
+    <Compile Include="Utils\Endpoints.cs" />
+    <Compile Include="Utils\C.cs" />
     <Compile Include="Utils\E.cs" />
+    <Compile Include="Utils\H.cs" />
     <Compile Include="Utils\L.cs" />
     <Compile Include="Utils\T.cs" />
     <Page Include="Controls\MarketOrderControl.xaml">

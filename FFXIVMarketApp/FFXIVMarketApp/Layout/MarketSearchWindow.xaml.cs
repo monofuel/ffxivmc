@@ -38,7 +38,7 @@ namespace FFXIVMarketApp.Layout
                 if (Market.LastItem == CurrentItem)
                 {
                     var Orders = Market.GetItemOrders(CurrentItem);
-                    OrdersControl.SetCollection(Orders);
+                    OrdersControl.SetCollection(Orders.List);
                     L.WriteLine("reloading search with new data");
                 }
             };
@@ -73,7 +73,7 @@ namespace FFXIVMarketApp.Layout
             int ItemId;
             if (int.TryParse(Input,out ItemId))
             {
-                OrdersControl.SetCollection(Market.GetItemOrders(ItemId));
+                OrdersControl.SetCollection(Market.GetItemOrders(ItemId).List);
                 CurrentItem = ItemId;
             } else
             {

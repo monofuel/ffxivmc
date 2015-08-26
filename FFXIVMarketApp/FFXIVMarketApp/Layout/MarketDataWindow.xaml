@@ -7,5 +7,5 @@
         mc:Ignorable="d"
         Title="MarketDataWindow" Height="300" Width="300">
     <local:MarketOrderControl
-        x:Name="OrdersControl"/>
+        x:Name="OrdersControl" Loaded="OrdersControl_Loaded"/>
 </Window>
