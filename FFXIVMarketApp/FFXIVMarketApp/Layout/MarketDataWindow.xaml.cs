@@ -48,7 +48,7 @@ namespace FFXIVMarketApp.Layout
             {
                 var Orders = Market.GetItemOrders(Market.LastItem);
                 OrdersControl.SetCollection(Orders.List);
-                L.WriteLine("Updating to " + Market.LastItem + " with " + Orders.List.Count + " Hits");
+                //L.WriteLine("Updating to " + Market.LastItem + " with " + Orders.List.Count + " Hits");
             };
 
             Loaded += (s, e) =>

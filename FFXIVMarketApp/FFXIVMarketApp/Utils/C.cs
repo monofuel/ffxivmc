@@ -9,6 +9,6 @@ namespace FFXIVMarketApp.Utils
     class C
     {
 
-        public static readonly Uri Host = new Uri("http://localhost/");
+        public static readonly Uri Host = new Uri("http://localhost:3000/");
     }
 }

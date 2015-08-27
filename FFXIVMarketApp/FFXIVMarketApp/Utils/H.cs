@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,32 +13,39 @@ namespace FFXIVMarketApp.Utils
     {
         public static void Post(Uri Destination,JObject Data)
         {
-            var Request = WebRequest.Create(Destination);
+            var client = new HttpClient();
+            var content = new StringContent(Data.ToString(),
+                                            Encoding.UTF8,
+                                            "application/json");
 
-            var PostData = Encoding.ASCII.GetBytes(Data.ToString());
-
-            Request.Method = "POST";
-            Request.ContentType = "application/json";
-            Request.ContentLength = PostData.Length;
-
-            using (var stream = Request.GetRequestStream())
-            {
-                stream.Write(PostData, 0, PostData.Length);
-            }
             L.WriteLine("POST " + Destination);
-            var response = Request.GetResponse();
-            L.WriteLine("RESPONSE: " + response);
+            try {
+                var response = client.PostAsync(Destination,content);
+
+                L.WriteLine("RESPONSE: " + response);
+            } catch (Exception e)
+            {
+                L.WriteLine("Post failed");
+                L.WriteLine(e.Message);
+            }
         }
 
         public static void Get(Uri Destination, string Options )
         {
-            var Request = WebRequest.Create(Destination + Options);
-
-            Request.Method = "GET";
+            var client = new HttpClient();
 
             L.WriteLine("GET " + Destination + Options);
-            var response = Request.GetResponse();
-            L.WriteLine("RESPONSE: " + response);
+            try
+            {
+                var response = client.GetAsync(Destination + Options);
+
+                L.WriteLine("RESPONSE: " + response);
+            }
+            catch (Exception e)
+            {
+                L.WriteLine("Get failed");
+                L.WriteLine(e.Message);
+            }
         }
     }
 }

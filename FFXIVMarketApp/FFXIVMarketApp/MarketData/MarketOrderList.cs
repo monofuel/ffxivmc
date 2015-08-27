@@ -12,6 +12,7 @@ namespace FFXIVMarketApp.MarketData
     {
         public long Timestamp { get; set; }
         public List<MarketOrder> List { get; set; }
+        public int ItemId { get; set; }
 
         public MarketOrderList()
         {
@@ -32,6 +33,11 @@ namespace FFXIVMarketApp.MarketData
             foreach (var Order in List)
                 JOrders.Add(Order.ToJSON());
             OrderList["orders"] = JOrders;
+
+            if (List.Count > 0)
+            {
+                OrderList["item"] = List[0].Item;
+            }
 
             return OrderList;
         }

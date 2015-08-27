@@ -1,11 +1,11 @@
 mongoose = require('mongoose')
 
 MarketOrderSchema = new mongoose.Schema({
-  Price: Number
-  Quantity: Number
-  HQ: Boolean
-  MarketCode: Number
-  Retainer: String
+  price: Number
+  quantity: Number
+  hq: Boolean
+  marketcode: Number
+  retainer: String
   })
 
 mongoose.model('MarketOrder',MarketOrderSchema)

@@ -12,6 +12,8 @@ namespace FFXIVMarketApp.MarketData
     static class Market
     {
         public static volatile int LastItem;
+        private static int lastQuantity;
+        private static bool Posted = false;
         private readonly static Dictionary<int, MarketOrderList> Orders = new Dictionary<int, MarketOrderList>();
         private static Task IntervalThread;
 
@@ -19,16 +21,24 @@ namespace FFXIVMarketApp.MarketData
         {
             IntervalThread = T.IntervalThread(() =>
             {
-                int Item = FFReader.R.GetCurrentItemId();
-                if (Item != LastItem)
-                {
-                    
-                    if (Item != 0)
+                try {
+                    int Item = FFReader.R.GetCurrentItemId();
+                    //L.WriteLine("" + Item);
+                    if (Item != LastItem)
                     {
-                        int OrderCount = FFReader.R.GetQuantity();
+                        L.WriteLine("new item");
+                        lastQuantity = -1;
+                        LastItem = Item;
+                        Posted = false;
+                    }
+
+                    int OrderCount = FFReader.R.GetQuantity();
+
+                    if (Item > 0 && lastQuantity == OrderCount && !Posted)
+                    {
                         if (OrderCount != -1)
                         {
-                        
+
                             LastItem = Item;
                             ClearOrders(Item);
                             lock (Orders)
@@ -38,15 +48,26 @@ namespace FFXIVMarketApp.MarketData
                                     AddOrder(FFReader.R.GetItem(i));
                                 }
                             }
+                            if (OrderCount > 0)
+                            {
+                                H.Post(Endpoints.MarketOrders(), Orders[LastItem].ToJSON());
+                                L.WriteLine("Posted new orders");
+                            }
+                            Posted = true;
                             E.Post("ItemInterval");
                         }
-                    } else
+                    }
+                    else
                     {
                         E.Post("ItemInterval");
                     }
-                    
+                    lastQuantity = OrderCount;
+
+                } catch (Exception)
+                {
+                    L.WriteLine("market update failed");
                 }
-            }, 500);
+            }, 400);
         }
 
         public static MarketOrderList GetItemOrders(int Item)

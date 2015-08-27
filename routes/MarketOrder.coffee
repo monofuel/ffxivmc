@@ -1,11 +1,11 @@
 mongoose = require('mongoose')
-MarketOrderList = mongoose.model('MarketOrderList')
+MarketList = mongoose.model('MarketOrderList')
 MarketOrder = mongoose.model('MarketOrder')
 
 module.exports = (app) ->
   app.route('/marketorder')
   .get((req, res, next) ->
-    console.log("recieved MarketOrderList get " + JSON.stringify(req.body))
+    #console.log("recieved MarketOrderList get " + JSON.stringify(req.body))
     if (req.body == null)
       res.status(500)
       res.render("error: no body attached")
@@ -18,6 +18,7 @@ module.exports = (app) ->
 
     MarketOrderList.find((err,orders) ->
       if (err)
+        console.log(err)
         return next(err)
       res.json(orders)
       return
@@ -25,27 +26,29 @@ module.exports = (app) ->
   )
 
   .post((req,res,next) ->
-    console.log("recieved MarketOrderList post " + JSON.stringify(req.body))
-    MarketList = new MarketOrderList(req.body)
+    #console.log("recieved MarketOrderList post " + JSON.stringify(req.body))
+    List = new MarketList(req.body)
 
-    if (MarketList == null)
+    if (List == null)
       res.status(500)
       res.render('no market data posted')
+      console.log('recieved post without data')
       return
 
-    if (MarketList.item <= 0)
+    if (List.item <= 0)
       res.status(500)
       res.render('error: invalid item number')
+      console.log('recieved post with invalid item number')
       return
 
-    MarketList.save( (err,post) ->
+    List.save( (err) ->
       if (err)
+        console.log(err)
         return next(err)
-      res.json(MarketList)
-      return
     )
 
-    console.log("added new item: " + NewMarketOrderList.item)
+    console.log("added new item: " + List.item + " with"
+                + List.orders.length + " orders.")
   )
 
   .put((req,res,next) ->

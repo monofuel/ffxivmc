@@ -40,9 +40,9 @@ namespace FFXIVMarketApp.MemoryScan
 
         private const int PROCESS_WM_READ = 0x0010;
 
-        private const int MARKET_PTR = 0x0F640FE4;
-        private const int ITEM_SEARCH_PTR = 0x0F6417D0;
-        private const int MARKET_MESSAGE_PTR = 0x31561E22;
+        private const int MARKET_PTR = 0x1570A5A4;
+        private const int ITEM_SEARCH_PTR = 0x15E6B0C4;
+        private const int MARKET_MESSAGE_PTR = 0x339DB462;
         private const int ORDER_BASE = MARKET_PTR + 4;
         private const int QUANTITY_OFFSET = 4;
         private const int HQ_OFFSET = 8;
@@ -73,20 +73,21 @@ namespace FFXIVMarketApp.MemoryScan
         public int GetQuantity()
         {
             int Hits = ReadInt(MARKET_PTR);
-            string Message = ReadString(MARKET_MESSAGE_PTR,14);
+            //TODO fix this
+            /*string Message = ReadString(MARKET_MESSAGE_PTR,14);
             if (Message == "No items found")
             {
-                L.WriteLine("found 0 Hits");
+                //L.WriteLine("found 0 Hits");
                 return 0;
-            } else
+            }*/
             {
                 if (Hits == 0)
                 {
-                    L.WriteLine("Item not loaded yet");
+                    //L.WriteLine("Item not loaded yet");
                     return -1;
                 }
             }
-            L.WriteLine("found " + Hits + " Hits");
+            //L.WriteLine("found " + Hits + " Hits");
             return Hits;
         }
 
