@@ -1,0 +1,72 @@
+<!doctype html>
+
+<html ng-app="ffxivmc">
+  <head>
+    <title>FFXIV Market Crafter tool</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+    <style>
+        html                    { overflow-y:scroll; }
+        body                    { padding-top:50px; }
+        #todo-list              { margin-bottom:30px; }
+    </style>
+
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="core.js"></script>
+
+  </head>
+
+  <body ng-controller="mainController">
+      <div class="container">
+
+          <div class="jumbotron text-center">
+              <h1>Items: <span class="label label-info">{{ items.length }}</span></h1>
+          </div>
+
+          <div align="center" class="wrapper">
+            <form>
+              <table>
+                <tr>
+                  <td>
+                    <select>
+                        <option ng-repeat="item in items" ng-click="selectItem(item)" value="item">Select</option>
+                    </select>
+                  </td>
+                  <td><input type="text" ng-model="selected_order.timestamp"/></td>
+                  <td><input type="text" ng-model="selected_order.item"/></td>
+                  <td> orders: {{selected_order.orders.length}}</td>
+                </tr>
+              </table>
+              <table>
+                <tr>
+                  <td>HQ</td>
+                  <td>Price</td>
+                  <td>Quantity</td>
+                  <td>Total</td>
+                  <td>Nation</td>
+                  <td>Retainer</td>
+                </tr>
+                <tr ng-repeat="order in selected_order.orders" value="order">
+                  <td><input type="checkbox" ng-model="order.hq"/></td>
+                  <td><input type="text" ng-model="order.price"/></td>
+                  <td><input type="text" ng-model="order.quantity"/></td>
+                  <td>{{order.price * order.quantity}}</td>
+                  <td>
+                    <select ng-model="order.marketcode"
+                            ng-options="item.id as item.name for item in marketTypes">
+                   </select>
+                  </td>
+                  <td><input type="text" ng-model="order.retainer"/></td>
+                </tr>
+              </table>
+              <button ng-click="updateOrder(selected_order)">Save</button>
+            </form>
+        </div>
+
+      </div>
+
+  </body>
+
+</html>

@@ -1,26 +1,34 @@
 mongoose = require('mongoose')
 MarketList = mongoose.model('MarketOrderList')
-MarketOrder = mongoose.model('MarketOrder')
 
 module.exports = (app) ->
   app.route('/marketorder')
   .get((req, res, next) ->
     #console.log("recieved MarketOrderList get " + JSON.stringify(req.body))
-    if (req.body == null)
-      res.status(500)
-      res.render("error: no body attached")
+    if (req.query.item == undefined)
+      MarketList.find((err,orders) ->
+        if (err)
+          console.log(err)
+          return next(err)
+        itemIds = new Array()
+        for order in orders
+          if (itemIds.indexOf(order.item) == -1)
+            itemIds.push(order.item)
+        itemIds.sort((a,b) -> a-b)
+        res.send(itemIds)
+        )
       return
 
-    if (req.body.item <= 0)
+    if (req.query.item <= 0)
       res.status(500)
       res.render('error: invalid item number')
       return
 
-    MarketOrderList.find((err,orders) ->
+    MarketList.findOne({item: req.query.item},(err,orders) ->
       if (err)
         console.log(err)
         return next(err)
-      res.json(orders)
+      res.send(orders)
       return
     )
   )
@@ -50,9 +58,46 @@ module.exports = (app) ->
     console.log("added new item: " + List.item + " with"
                 + List.orders.length + " orders.")
   )
+  .delete((req,res,next) ->
 
-  .put((req,res,next) ->
-    res.render('not implimented yet')
+    if (req.query == undefined)
+      res.status(500)
+      res.render('error: invalid item number')
+      return
+
+    MarketList.remove({item: req.query.item},(err,order) ->
+        if (err)
+          console.log(err);
+          res.send(err);
+      )
+    return
+
   )
+
+  app.route('/marketorder/:list_id')
+  .put((req,res,enext) ->
+    MarketOrder = MarketList.findById(req.params.list_id,(err,order) ->
+      order.item = req.body.item
+      order.timestamp = req.body.timestamp
+      order.orders = req.body.orders
+      order.save((err) ->
+          if(err)
+            console.log(err)
+            return next(err)
+          console.log("updated " + req.params.list_id)
+          return res.send(order)
+        )
+      )
+    )
+
+  .delete((req,res,next) ->
+    MarketList.remove({_id: req.params.list_id},(err,order) ->
+        if (err)
+          console.log(err);
+          res.send(err);
+      )
+
+
+    )
 
   console.log("Market routes loaded")

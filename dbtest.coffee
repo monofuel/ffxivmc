@@ -1,103 +1,47 @@
 mongoose = require('mongoose')
 
 MarketOrders = require('./models/MarketOrder')
-MarketOrder = MarketOrders.order
-MarketList = MarketOrders.list
+
+MarketList = mongoose.model('MarketOrderList')
 
 mongoose.connect('mongodb://192.168.11.160/ffxivmc')
 db = mongoose.connection
 
 console.log('connected to db')
 
-List = {
-  "timestamp": 1440656164,
-  "orders": [
-    {
-      "item": 1752,
-      "price": 200,
-      "quantity": 1,
-      "hq": false,
-      "total": 200,
-      "marketcode": 60881,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 200,
-      "quantity": 1,
-      "hq": false,
-      "total": 200,
-      "marketcode": 60882,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 250,
-      "quantity": 1,
-      "hq": false,
-      "total": 250,
-      "marketcode": 60881,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 400,
-      "quantity": 1,
-      "hq": false,
-      "total": 400,
-      "marketcode": 60881,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 500,
-      "quantity": 1,
-      "hq": true,
-      "total": 500,
-      "marketcode": 60882,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 980,
-      "quantity": 1,
-      "hq": false,
-      "total": 980,
-      "marketcode": 60882,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 1000,
-      "quantity": 1,
-      "hq": false,
-      "total": 1000,
-      "marketcode": 60881,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 1000,
-      "quantity": 1,
-      "hq": false,
-      "total": 1000,
-      "marketcode": 60883,
-      "retainer": null
-    },
-    {
-      "item": 1752,
-      "price": 3000,
-      "quantity": 1,
-      "hq": true,
-      "total": 3000,
-      "marketcode": 60882,
-      "retainer": null
-    }
-  ],
-  "item": 1752
-}
+MarketList.find((err,list) ->
+  if (err)
+    console.log(err)
+    return
+  marketCodes = new Array()
+  for orders in list
+    for order in orders.orders
+      if (marketCodes.indexOf(order.marketcode) == -1)
+        marketCodes.push(order.marketcode)
+  marketCodes.sort((a,b) -> a-b)
+  console.log(marketCodes)
+)
 
-console.log('creating new list')
-list = new MarketList(List)
-console.log('list created')
-console.log(list)
+MarketList.find((err,list) ->
+  if (err)
+    console.log(err)
+    return
+  for orders in list
+    for order in orders.orders
+      if (order.marketcode > 4)
+        switch (order.marketcode)
+          when 60881 then order.marketcode = 1
+          when 60882 then order.marketcode = 2
+          when 60883 then order.marketcode = 3
+          when 60884 then order.marketcode = 4
+      order._id = undefined
+      order.save((err) ->
+        if (err)
+          console.log(err)
+        )
+    orders.save((err) ->
+      if (err)
+        console.log(err)
+    )
+  console.log("Done updating")
+)
