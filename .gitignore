@@ -9,6 +9,7 @@ pids
 *.seed
 
 core.js
+dbtest.js
 models/*.js
 util/*.js
 routes/*.js
