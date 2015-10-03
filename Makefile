@@ -18,7 +18,7 @@ util_js:
 	coffee -cb util/*.coffee
 
 public_js:
-	coffee -cb ./public/*.coffee
+	#coffee -cb ./public/*.coffee
 	coffee -cb ./public/*/*.coffee
 
 watch_public_js:
