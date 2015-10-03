@@ -23,8 +23,8 @@ public_js:
 	coffee -cb ./public/admin/*/*.coffee
 
 watch_public_js:
-	coffee -wcb ./public/*.coffee &
-	coffee -wcb ./public/*/*.coffee &
+	coffee -wcb ./public/market/*.coffee &
+	coffee -wcb ./public/admin/*/*.coffee &
 
 watch_core_js:
 	coffee -wcb ./*.coffee &

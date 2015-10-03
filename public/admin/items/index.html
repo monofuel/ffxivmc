@@ -4,69 +4,232 @@
   <head>
     <title>FFXIV Market Crafter tool</title>
 
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
-    <style>
-        html                    { overflow-y:scroll; }
-        body                    { padding-top:50px; }
-        #todo-list              { margin-bottom:30px; }
-    </style>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" media="screen" />
 
-    <!-- SPELLS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="core.js"></script>
 
   </head>
 
   <body ng-controller="mainController">
-      <div class="container">
-
-          <div class="jumbotron text-center">
-              <h1>Items: <span class="label label-info">{{ items.length }}</span></h1>
-          </div>
-
-          <div align="center" class="wrapper">
-            <form>
-              <table>
-                <tr>
-                  <td>
-                    <select>
-                        <option ng-repeat="item in items" ng-click="selectItem(item)" value="item">Select</option>
-                    </select>
-                  </td>
-                  <td><input type="text" ng-model="selected_order.timestamp"/></td>
-                  <td><input type="text" ng-model="selected_order.item"/></td>
-                  <td> orders: {{selected_order.orders.length}}</td>
-                </tr>
-              </table>
-              <table>
-                <tr>
-                  <td>HQ</td>
-                  <td>Price</td>
-                  <td>Quantity</td>
-                  <td>Total</td>
-                  <td>Nation</td>
-                  <td>Retainer</td>
-                </tr>
-                <tr ng-repeat="order in selected_order.orders" value="order">
-                  <td><input type="checkbox" ng-model="order.hq"/></td>
-                  <td><input type="text" ng-model="order.price"/></td>
-                  <td><input type="text" ng-model="order.quantity"/></td>
-                  <td>{{order.price * order.quantity}}</td>
-                  <td>
-                    <select ng-model="order.marketcode"
-                            ng-options="item.id as item.name for item in marketTypes">
-                   </select>
-                  </td>
-                  <td><input type="text" ng-model="order.retainer"/></td>
-                </tr>
-              </table>
-              <button ng-click="updateOrder(selected_order)">Save</button>
-            </form>
+    <div class="jumbotron text-center">
+        <h1>Items: <span class="label label-info">{{ items.length }}</span></h1>
+    </div>
+    <div id="output" align="center">
+      <p>Please enter either an item name or ID</p>
+      <p>It's OK to leave some entries blank</p>
+    </div>
+      <div class="container" align="center">
+        <div align="center" class="wrapper">
+          <h1>Item</h1>
+          <form>
+          <table>
+            <tr>
+              <td>Name</td>
+              <td><input id="item_name" type="text" ng-model="selected_item.name"/></td>
+            </tr>
+            <tr>
+              <td>Item ID</td>
+              <td><input id="item_id" type="text" ng-model="selected_item.id"/></td>
+            </tr>
+            <tr>
+              <td>Level</td>
+              <td><input type="text" ng-model="selected_item.level"/></td>
+            </tr>
+            <tr>
+              <td>iLevel</td>
+              <td><input type="text" ng-model="selected_item.ilevel"/></td>
+            </tr>
+            <tr>
+              <td>Class</td>
+              <td><input type="text" ng-model="selected_item.class"/></td>
+            </tr>
+            <tr>
+              <td>NPC Price</td>
+              <td><input type="text" ng-model="selected_item.npc_price"/></td>
+            </tr>
+            <tr>
+              <td>Craft Class</td>
+              <td><input type="text" ng-model="selected_item.craft_class"/></td>
+            </tr>
+            <tr>
+              <td>Repair Level</td>
+              <td><input type="text" ng-model="selected_item.repair_level"/></td>
+            </tr>
+            <tr>
+              <td>Repair Material ID</td>
+              <td><input type="text" id="repair_id" ng-model="selected_item.repair_material"/></td>
+              <td>Repair Material Name</td>
+              <td><input type="text" id="repair_name"/></td>
+            </tr>
+            <tr>
+              <td>Physical Damage</td>
+              <td><input type="text" ng-model="selected_item.physical_damage"/></td>
+            </tr>
+            <tr>
+              <td>Auto Attack</td>
+              <td><input type="text" ng-model="selected_item.auto_attack"/></td>
+            </tr>
+            <tr>
+              <td>Delay</td>
+              <td><input type="text" ng-model="selected_item.delay"/></td>
+            </tr>
+            <tr>
+              <td>Strength</td>
+              <td><input type="text" ng-model="selected_item.strength"/></td>
+            </tr>
+            <tr>
+              <td>Dexterity</td>
+              <td><input type="text" ng-model="selected_item.dexterity"/></td>
+            </tr>
+            <tr>
+              <td>Vitality</td>
+              <td><input type="text" ng-model="selected_item.vitality"/></td>
+            </tr>
+            <tr>
+              <td>Intelligence</td>
+              <td><input type="text" ng-model="selected_item.intelligence"/></td>
+            </tr>
+            <tr>
+              <td>Mind</td>
+              <td><input type="text" ng-model="selected_item.mind"/></td>
+            </tr>
+            <tr>
+              <td>Piety</td>
+              <td><input type="text" ng-model="selected_item.piety"/></td>
+            </tr>
+            <tr>
+              <td>Spell Speed</td>
+              <td><input type="text" ng-model="selected_item.spell_speed"/></td>
+            </tr>
+            <tr>
+              <td>Skill Speed</td>
+              <td><input type="text" ng-model="selected_item.skill_speed"/></td>
+            </tr>
+            <tr>
+              <td>Parry</td>
+              <td><input type="text" ng-model="selected_item.parry"/></td>
+            </tr>
+            <tr>
+              <td>Crit</td>
+              <td><input type="text" ng-model="selected_item.crit"/></td>
+            </tr>
+            <tr>
+              <td>Convertable</td>
+              <td><input type="text" ng-model="selected_item.convert"/></td>
+            </tr>
+            <tr>
+              <td>Projectable</td>
+              <td><input type="text" ng-model="selected_item.projectable"/></td>
+              <tr>
+                <td>Dyeable</td>
+                <td><input type="text" ng-model="selected_item.dyeable"/></td>
+              </tr>
+              <tr>
+                <td>Crest</td>
+                <td><input type="text" ng-model="selected_item.crest"/></td>
+              </tr>
+              <tr>
+                <td>Tradeable</td>
+                <td><input type="text" ng-model="selected_item.trade"/></td>
+              </tr>
+              <tr>
+                <td>Lodestone Code</td>
+                <td><input type="text" ng-model="selected_item.lodestone_code"/></td>
+              </tr>
+            </tr>
+          </table>
+          <button id="item_button" disabled=true>Disabled</button>
+        </form>
         </div>
-
+        <div align="center" class="wrapper">
+          <form>
+          <h1>Recipe</h1>
+          <table>
+            <tr>
+              <td>Yield</td>
+              <td><input type="text" ng-model="selected_recipe.yield"/></td>
+            </tr>
+            <tr>
+              <td>Minimum Craftmanship</td>
+              <td><input type="text" ng-model="selected_recipe.min_craftmanship"/></td>
+            </tr>
+            <tr>
+              <td>Minimum Control</td>
+              <td><input type="text" ng-model="selected_recipe.min_control"/></td>
+            </tr>
+            <tr>
+              <td>Material ID</td>
+              <td>Quantity</td>
+            </tr>
+            <tr ng-model="selected_recipe.craft_mats" ng-repeat="mat in selected_recipe.craft_mats">
+              <td><input type="text" ng-model="mat.item"/></td>
+              <td><input type="text" ng-model="mat.quantity"/></td>
+            </tr>
+            <tr>
+              <td><button id="new_mat_button" ng-click="addNewMat()">Add New Material</button></td>
+            </tr>
+          </table>
+          <button id="recipe_button" disabled=true>Disabled</button>
+        </form>
+        </div>
+        <div align="center" class="wrapper">
+          <form>
+          <h1>Gathering</h1>
+          <table>
+            <tr>
+              <td>Gather Class</td>
+              <td><input type="text" ng-model="selected_gather.gather_class"/></td>
+            </tr>
+            <tr>
+              <td>Minimum Gathering</td>
+              <td><input type="text" ng-model="selected_gather.min_gathering"/></td>
+            </tr>
+            <tr>
+              <td>Minimum Perception</td>
+              <td><input type="text" ng-model="selected_gather.min_perception"/></td>
+            </tr>
+            <tr>
+              <td>Unspoiled</td>
+              <td><input type="checkbox" ng-model="selected_gather.unspoiled"/></td>
+            </tr>
+            <tr>
+              <td>Start Hour</td>
+              <td><input type="text" ng-model="selected_gather.time.hour"/></td>
+            </tr>
+            <tr>
+              <td>Start Minute</td>
+              <td><input type="text" ng-model="selected_gather.time.minute"/></td>
+            </tr>
+            <tr>
+              <td>Duration Hours</td>
+              <td><input type="text" ng-model="selected_gather.duration.hour"/></td>
+            </tr>
+            <tr>
+              <td>Duration Minutes</td>
+              <td><input type="text" ng-model="selected_gather.duration.minute"/></td>
+            </tr>
+            <tr>
+              <td>X</td>
+              <td>Y</td>
+              <td>Zone</td>
+            </tr>
+            <tr ng-model="selected_gather.locations" ng-repeat="loc in selected_gather.locations">
+              <td><input type="text" ng-model="loc.x"/></td>
+              <td><input type="text" ng-model="loc.y"/></td>
+              <td><input type="text" ng-model="loc.area"/></td>
+            </tr>
+            <tr>
+              <td><button id="new_gather_button" ng-click="addNewGather()">Add New Location</button></td>
+            </tr>
+          </table>
+          <button id="gather_button" disabled=true>Disabled</button>
+        </form>
+        </div>
       </div>
-
   </body>
-
 </html>

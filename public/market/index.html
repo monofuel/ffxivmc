@@ -5,11 +5,7 @@
     <title>FFXIV Market Crafter tool</title>
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
-    <style>
-        html                    { overflow-y:scroll; }
-        body                    { padding-top:50px; }
-        #todo-list              { margin-bottom:30px; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" media="screen" />
 
     <!-- SPELLS -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
@@ -19,12 +15,12 @@
   </head>
 
   <body ng-controller="mainController">
-      <div class="container">
 
-          <div class="jumbotron text-center">
-              <h1>Market Items: <span class="label label-info">{{ orders.length }}</span></h1>
-          </div>
-
+      <div class="jumbotron text-center">
+          <h1>Market Items: <span class="label label-info">{{ orders.length }}</span></h1>
+      </div>
+      <p>Select an item from the drop-down menu</p>
+        <div class="container">
           <div align="center" class="wrapper">
             <form>
               <table>

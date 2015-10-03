@@ -8,6 +8,12 @@ mainController = ($scope,$http) ->
                         {id: 4, name: 'Foundation'}]
   setInterval(() ->
     $http.get('/marketorder')
+      .success((data) ->
+        $scope.orders = data
+      )
+      .error((data) ->
+        console.log('Error: ' + data)
+      )
   ,5000)
 
 
@@ -43,7 +49,6 @@ mainController = ($scope,$http) ->
     $http.post('/marketorder', $scope.formData)
         .success((data) ->
           $scope.formData = {}
-          $scope.orders = data
           console.log(data)
         )
         .error((data) ->
@@ -54,7 +59,6 @@ mainController = ($scope,$http) ->
   $scope.deleteOrder = (item_id) ->
     $http.delete('/marketorder?item=' + item_id)
         .success((data) ->
-          $scope.todos = data
           console.log(data)
         )
         .error((data) ->

@@ -70,16 +70,16 @@ module.exports = (app) ->
       return
 
     MarketList.remove({item: req.query.item},(err,order) ->
-        if (err)
-          console.log(err);
-          res.send(err);
+      if (err)
+        console.log(err)
+        res.send(err)
       )
     return
 
   )
 
   app.route('/marketorder/:list_id')
-  .put((req,res,enext) ->
+  .put((req,res,next) ->
     #temp disabled
     res.status(500)
     res.render('Disabled')
@@ -89,11 +89,11 @@ module.exports = (app) ->
       order.timestamp = req.body.timestamp
       order.orders = req.body.orders
       order.save((err) ->
-          if(err)
-            console.log(err)
-            return next(err)
-          console.log("updated " + req.params.list_id)
-          return res.send(order)
+        if(err)
+          console.log(err)
+          return next(err)
+        console.log("updated " + req.params.list_id)
+        return res.send(order)
         )
       )
     )
@@ -106,9 +106,9 @@ module.exports = (app) ->
 
 
     MarketList.remove({_id: req.params.list_id},(err,order) ->
-        if (err)
-          console.log(err);
-          res.send(err);
+      if (err)
+        console.log(err)
+        res.send(err)
       )
 
 
