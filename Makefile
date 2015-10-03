@@ -1,4 +1,4 @@
-all: core_js models_js routes_js util_js
+all: core_js models_js routes_js util_js public_js
 
 start: all
 	supervisor -w .,./models/,./routes/,./util/ node app.js
