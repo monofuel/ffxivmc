@@ -1,5 +1,33 @@
 mongoose = require('mongoose')
 MarketList = mongoose.model('MarketOrderList')
+Item = mongoose.model('Item')
+Recipe = mongoose.model('Recipe')
+
+get_item_id = (itemIds,name) ->
+  for item in itemIds
+    if (item.name == name)
+      return item.id
+  console.log("item not found: " + name)
+  return ""
+
+get_item_name = (itemIds,id) ->
+  for item in itemIds
+    if (item.id == id)
+      return item.name
+  console.log("item not found: " + id)
+  return ""
+
+fetch_item_list = (callback) ->
+  Item.find((err,items) ->
+    if (err)
+      console.log(err)
+      return next(err)
+    itemArray = new Array()
+    for item in items
+      itemArray.push({id: item.id,name: item.name})
+    callback(itemArray)
+
+    )
 
 module.exports = (app) ->
   app.route('/marketorder')
@@ -113,5 +141,30 @@ module.exports = (app) ->
 
 
     )
+
+  app.route('/desiredorders')
+  .get((req, res, next) ->
+    fetch_item_list((itemArray) ->
+      #items in recipes not in database
+      UnknownItems = new Array()
+      Recipe.distinct("craft_mats.item", (err,craft_mats) ->
+        res.status(200)
+        MarketList.distinct("id", (err,order_mats) ->
+          craft_mats.forEach((item) ->
+            if (order_mats.indexOf(item) == -1)
+              UnknownItems.push(item)
+            )
+
+          ItemNames = new Array()
+          UnknownItems.forEach((item_id) ->
+            ItemNames.push(get_item_name(itemArray,item_id))
+            )
+          res.send(ItemNames)
+          )
+        )
+      )
+
+    )
+
 
   console.log("Market routes loaded")

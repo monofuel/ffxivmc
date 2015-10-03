@@ -71,6 +71,21 @@ GatherSchema = new mongoose.Schema({
   lodestone_code: String
   })
 
+VendorSchema = new mongoose.Schema({
+  name: String
+  location: {
+    x: Number
+    y: Number
+    area: String
+  }
+  items: [
+    item: Number
+    price: Number
+    ]
+
+  })
+
 mongoose.model('Item',ItemSchema)
 mongoose.model('Recipe',RecipeSchema)
 mongoose.model('Gather',GatherSchema)
+mongoose.model('Vendor',VendorSchema)
