@@ -17,18 +17,22 @@ routes_js:
 util_js:
 	coffee -cb util/*.coffee
 
-watch_public_js: ./*.coffee
+public_js:
+	coffee -cb ./public/*.coffee
+	coffee -cb ./public/*/*.coffee
+
+watch_public_js:
 	coffee -wcb ./public/*.coffee &
 	coffee -wcb ./public/*/*.coffee &
 
-watch_core_js: ./*.coffee
+watch_core_js:
 	coffee -wcb ./*.coffee &
 
-watch_routes_js: ./routes/*.coffee
+watch_routes_js:
 	coffee -wcb ./routes/*.coffee &
 
-watch_util_js: ./*.coffee
+watch_util_js:
 	coffee -wcb ./util/*.coffee &
 
-watch_models_js: ./routes/*.coffee
+watch_models_js:
 	coffee -wcb ./models/*.coffee &
