@@ -59,6 +59,10 @@ module.exports = (app) ->
                 + List.orders.length + " orders.")
   )
   .delete((req,res,next) ->
+    #temp disabled
+    res.status(500)
+    res.render('Disabled')
+    return
 
     if (req.query == undefined)
       res.status(500)
@@ -76,6 +80,10 @@ module.exports = (app) ->
 
   app.route('/marketorder/:list_id')
   .put((req,res,enext) ->
+    #temp disabled
+    res.status(500)
+    res.render('Disabled')
+    return
     MarketOrder = MarketList.findById(req.params.list_id,(err,order) ->
       order.item = req.body.item
       order.timestamp = req.body.timestamp
@@ -91,6 +99,12 @@ module.exports = (app) ->
     )
 
   .delete((req,res,next) ->
+    #temp disabled
+    res.status(500)
+    res.render('Disabled')
+    return
+
+
     MarketList.remove({_id: req.params.list_id},(err,order) ->
         if (err)
           console.log(err);
