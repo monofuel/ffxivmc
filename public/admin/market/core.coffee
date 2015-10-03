@@ -6,14 +6,18 @@ mainController = ($scope,$http) ->
                         {id: 2, name: 'Gridania'}
                         {id: 3, name: 'Uldah'}
                         {id: 4, name: 'Foundation'}]
+  setInterval(() ->
+    $http.get('/marketorder')
+  ,5000)
+
 
   #when landing on the page, get all todos and show them
   $http.get('/marketorder')
       .success((data) ->
-          $scope.orders = data
+        $scope.orders = data
       )
       .error((data) ->
-          console.log('Error: ' + data)
+        console.log('Error: ' + data)
       )
 
   $scope.selectOrder = (item_id) ->
@@ -36,23 +40,23 @@ mainController = ($scope,$http) ->
 
   #when submitting the add form, send the text to the node API
   $scope.createOrder = () ->
-      $http.post('/marketorder', $scope.formData)
-          .success((data) ->
-              $scope.formData = {} #clear the form so our user is ready to enter another
-              $scope.orders = data
-              console.log(data)
-          )
-          .error((data) ->
-              console.log('Error: ' + data)
-          )
+    $http.post('/marketorder', $scope.formData)
+        .success((data) ->
+          $scope.formData = {}
+          $scope.orders = data
+          console.log(data)
+        )
+        .error((data) ->
+          console.log('Error: ' + data)
+        )
 
   #delete a todo after checking it
   $scope.deleteOrder = (item_id) ->
-      $http.delete('/marketorder?item=' + item_id)
-          .success((data) ->
-              $scope.todos = data
-              console.log(data)
-          )
-          .error((data) ->
-              console.log('Error: ' + data)
-          )
+    $http.delete('/marketorder?item=' + item_id)
+        .success((data) ->
+          $scope.todos = data
+          console.log(data)
+        )
+        .error((data) ->
+          console.log('Error: ' + data)
+        )

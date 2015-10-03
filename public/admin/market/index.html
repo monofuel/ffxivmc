@@ -25,9 +25,7 @@
               <table>
                 <tr>
                   <td>
-                    <select>
-                        <option ng-repeat="order in orders" ng-click="selectOrder(order)" value="order">{{order}}</option>
-                    </select>
+                    <select ng-options="order for order in orders" ng-model="order" ng-change="selectOrder(order)"/>
                   </td>
                   <td><input type="text" ng-model="selected_order.timestamp"/></td>
                   <td><input type="text" ng-model="selected_order.item"/></td>
