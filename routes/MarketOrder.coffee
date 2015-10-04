@@ -1,7 +1,10 @@
+
 mongoose = require('mongoose')
 MarketList = mongoose.model('MarketOrderList')
 Item = mongoose.model('Item')
 Recipe = mongoose.model('Recipe')
+Vendor = mongoose.model('Vendor')
+async = require('async')
 
 get_item_id = (itemIds,name) ->
   for item in itemIds
@@ -28,6 +31,36 @@ fetch_item_list = (callback) ->
     callback(itemArray)
 
     )
+
+fetch_item_price = (id,callback) ->
+  async.parallel(
+    market_price: (cb) ->
+      MarketList.findOne({item: id}, (err,result) ->
+        if (result == null)
+          console.log("No market orders")
+          return NaN
+        price = result.orders[0].price
+        console.log("Market price: " + price)
+        cb(err,price)
+        )
+    vendor_price: (cb) ->
+      Vendor.findOne({'items.item': id}, (err, result) ->
+        if (result == null)
+          console.log("No vendors")
+          return NaN
+        price = 0
+        result.items.forEach((item) ->
+          if (item.item == id)
+            price = item.price
+          )
+        console.log("Vendor price: " + price)
+        cb(err,price)
+        )
+    , callback
+    )
+
+calculate_price = (id,callback) ->
+
 
 module.exports = (app) ->
   app.route('/marketorder')
@@ -146,25 +179,55 @@ module.exports = (app) ->
   .get((req, res, next) ->
     fetch_item_list((itemArray) ->
       #items in recipes not in database
-      UnknownItems = new Array()
       Recipe.distinct("craft_mats.item", (err,craft_mats) ->
-        res.status(200)
-        MarketList.distinct("id", (err,order_mats) ->
-          craft_mats.forEach((item) ->
-            if (order_mats.indexOf(item) == -1)
-              UnknownItems.push(item)
+        Recipe.distinct("id", (err,crafted_items) ->
+          craft_mats = craft_mats.concat(crafted_items)
+          #filter unique
+          craft_mats = craft_mats.filter((value,index,self) ->
+            return self.indexOf(value) == index
             )
 
-          ItemNames = new Array()
-          UnknownItems.forEach((item_id) ->
-            ItemNames.push(get_item_name(itemArray,item_id))
+          MarketList.distinct("item", (err,order_mats) ->
+            craft_mats = craft_mats.filter( (e) ->
+              return order_mats.indexOf(e) == -1
+              )
+            ItemNames = new Array()
+            craft_mats.forEach((item_id) ->
+              ItemNames.push(get_item_name(itemArray,item_id))
+              )
+            ItemNames.sort((a,b) ->
+              if (a < b)
+                return -1
+              if (b < a)
+                return 1
+              return 0
+              )
+            res.status(200)
+            res.send(ItemNames)
             )
-          res.send(ItemNames)
           )
         )
       )
-
     )
+  app.route('/bestcrafts')
+  .get((req, res, next) ->
+    fetch_item_list((itemArray) ->
 
+      fetch_item_price(2997,(err,result) ->
+        console.log(get_item_name(itemArray,2997) +
+          " Price: " + market_price.result )
+        )
+      return
+
+      recipe_price_list = new Array()
+      Recipe.find( (err,allRecipes) ->
+        allRecipes.forEach( (recipe) ->
+          calculate_price(recipe.id,(mat_price) ->
+            console.log(recipe.id + "Price: " + mat_price)
+            )
+          )
+        )
+      )
+    )
 
   console.log("Market routes loaded")
