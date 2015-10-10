@@ -67,6 +67,11 @@ module.exports = (app) ->
     )
   .post((req,res,next) ->
     NewRecipe = new Recipe(req.body)
+
+    res.status(500)
+    res.render('Disabled')
+    return
+
     if (NewRecipe == null)
       res.status(500)
       res.render('no recipe posted')

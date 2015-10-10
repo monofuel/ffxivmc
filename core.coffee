@@ -4,7 +4,7 @@ require('./models/MarketOrder')
 require('./models/Item')
 
 module.exports = (app) ->
-  mongoose.connect('mongodb://192.168.11.160/ffxivmc')
+  mongoose.connect('mongodb://localhost/ffxivmc')
   db = mongoose.connection
 
   console.log('connected to db')
