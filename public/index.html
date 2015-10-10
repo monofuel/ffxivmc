@@ -27,7 +27,7 @@
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">FFXIVMC</a>
+            <a class="navbar-brand" href="#">FFXIVMC Lamia</a>
           </div>
           <div>
             <ul class="nav navbar-nav">
@@ -50,8 +50,26 @@
           </div>
         </div>
       </nav>
-      <div class="container">
-        <!-- content goes here-->
+      <div class="container-fluid">
+        <div id="errorAlert" >
+          
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="well">
+              <h2>Welcome!</h2>
+              <p>
+                The goal of this site is to catalog market orders from the server Lamia and figure out what the most
+                profitable items to gather and craft are. This website is still a work in progress, so expect some rough edges.
+              </p>
+              <p>
+                The most useful component of this website is our ffxivapp plugin, which can be found
+                <a href="https://github.com/monofuel/ffxivapp-ffxivmc-plugin/blob/master/net.japura.ffxivmc.zip?raw=true">Here</a>
+                and will forward any market data it finds to this website. The plugin is also open source on github.
+              </p>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-sm-4">
             <div class="well">
@@ -66,6 +84,7 @@
                     <th>Item Name</th>
                   </tr>
                 </thead>
+                <!-- TODO each item should link to item viewer for the item -->
                 <tbody id="staleItemBody">
 
                 </tbody>
@@ -75,13 +94,17 @@
           <div class="col-sm-8">
             <div class="well">
               <p>
-                Known Profitable Items
+                Possibly Profitable Items
                 <button style="float: right;" type="button" class="btn btn-primary" onclick="refreshProfitableItems()">Refresh</button>
               </p>
               <table class="table table-condensed table-striped">
                 <thead>
                   <tr>
                     <th>Item Name</th>
+                    <th>Profit Estimate</th>
+                    <th>Market Price</th>
+                    <th>Crafting Estimate</th>
+                    <th>Source</th>
                   </tr>
                 </thead>
                 <tbody id="ProfitableItemBody">

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>FFXIV Market Crafter tool</title>
+    <!-- JQuery, Angular and Bootstrap dependencies -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+
+    <!-- custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" media="screen" />
+
+    <!-- custom JS -->
+    <script src="/js/items.js"></script>
+    <script src="/js/market.js"></script>
+    <script src="/js/site.js"></script>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="jumbotron text-center">
+        <h1>Final Fantasy XIV Market Crafting Tool</h1>
+      </div>
+
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">FFXIVMC</a>
+          </div>
+          <div>
+            <ul class="nav navbar-nav">
+              <li class="active"> <a href="#">Home</a></li>
+              <li><a href="#">Item Viewer</a></li>
+              <li><a href="#">Market Status</a></li>
+              <li><a href="https://github.com/monofuel/ffxivapp-ffxivmc-plugin">Github</a></li>
+              <li class="dropdown admin" style="display: none;">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="admin/market/">Item Data</a></li>
+                  <li><a href="admin/items/">Market Data</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+              <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container">
+        <!-- content goes here-->
+
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Copyright <span class="glyphicon glyphicon-copyright-mark"></span> 2015 Monofuel</p>
+      </div>
+    </footer>
+  </body>
+</html>

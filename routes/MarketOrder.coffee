@@ -8,6 +8,10 @@ async = require('async')
 
 itemIds = {}
 
+lastBestCrafts = []
+recalcCrafts = false
+calculatingCrafts = false
+
 get_item_id = (name) ->
   for item in itemIds
     if (item == undefined)
@@ -231,6 +235,7 @@ module.exports = (app) ->
       if (err)
         console.log(err)
         return next(err)
+      recalcCrafts = true
     )
 
     console.log("added new item: " + List.item + " with"
@@ -329,6 +334,29 @@ module.exports = (app) ->
     )
   app.route('/bestcrafts')
   .get((req, res, next) ->
+
+
+    #hacky fix for now since calculating takes forever
+    if (calculatingCrafts == true)
+      if (lastBestCrafts.length == 0)
+        console.log("still calculating, sending empty array")
+        res.status(200)
+        return res.send("[]")
+      else
+        console.log("sending last cached crafts")
+        res.status(200)
+        return res.send(lastBestCrafts.slice(0,100))
+
+    if (recalcCrafts == false)
+      if (lastBestCrafts.length > 0)
+        console.log("sending last cached crafts")
+        res.status(200)
+        return res.send(lastBestCrafts.slice(0,100))
+
+    recalcCrafts = false
+    calculatingCrafts = true
+    console.log("recalculating crafts")
+
     fetch_item_list((itemArray) ->
       itemIds = itemArray
       ###
@@ -357,6 +385,7 @@ module.exports = (app) ->
                 actual_price: result_info.actual_price
                 id: result_info.id
                 market_sell_price: result_info.market_sell_price
+                mats: result_info.mats
 
                 )
               cb()
@@ -364,14 +393,17 @@ module.exports = (app) ->
             )
           )
 
-        async.parallel(async_all_recipes,(err) ->
+        async.series(async_all_recipes,(err) ->
           recipe_price_list.sort((a,b) ->
             a_profit = a.actual_price.price - a.market_sell_price
             b_profit = b.actual_price.price - b.market_sell_price
             return a_profit - b_profit
             )
+          lastBestCrafts = recipe_price_list
+          calculatingCrafts = false
+          console.log("crafts calculated")
           res.status(200)
-          res.send(recipe_price_list.slice(0,9))
+          res.send(recipe_price_list.slice(0,100))
           )
         )
       )

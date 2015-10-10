@@ -1,5 +1,9 @@
 displayError = (err) ->
-  console.log(err)
+  alertBubble = document.getElementById("errorAlert")
+
+  alertBubble.innerHTML = '<div class="alert alert-danger fade in">' +
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+    err + '</div>'
 
 refreshStaleItems = () ->
   staleItemTable = document.getElementById("staleItemBody")
@@ -15,12 +19,11 @@ refreshStaleItems = () ->
 
     displayList = data.slice(0,25)
 
-    #clear out table
-    staleItemTable.innerHTML = ""
-
+    table = ""
     displayList.forEach((item) ->
-        staleItemTable.innerHTML += "<tr><td>" + item + "</td></tr>"
+        table += "<tr><td>" + item + "</td></tr>"
       )
+    staleItemTable.innerHTML = table
     setTimeout(refreshStaleItems,10000)
     )
 
@@ -33,9 +36,28 @@ refreshProfitableItems = () ->
   if (profitItemTable == null)
     return
 
-
-  return
   $.get("/bestcrafts", (data) ->
+    if (data.length < 0)
+      return displayError("Could not retrieve item information")
+
+    #displayList = data.slice(0,25)
+    displayList = data
+
+    table = ""
+    displayList.forEach((item) ->
+      table += "<a onclick='itemInfo()'>"
+      table += "<tr>"
+      table += "<td>" + item.name + "</td>"
+      table += "<td>" + (item.market_sell_price - item.actual_price.price) + "</td>"
+      table += "<td>" + item.market_sell_price + "</td>"
+      table += "<td>" + item.actual_price.price + "</td>"
+      table += "<td>" + item.actual_price.source + "</td>"
+
+      table += "</tr>"
+
+      table += "</a>"
+      )
+    profitItemTable.innerHTML = table
 
     setTimeout(refreshProfitableItems,10000)
     )
