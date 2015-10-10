@@ -18,11 +18,12 @@ util_js:
 	coffee -cb util/*.coffee
 
 public_js:
-	#coffee -cb ./public/*.coffee
+	coffee -cb ./public/js/*.coffee
 	coffee -cb ./public/market/*.coffee
 	coffee -cb ./public/admin/*/*.coffee
 
 watch_public_js:
+	coffee -wcb ./public/js/*.coffee &
 	coffee -wcb ./public/market/*.coffee &
 	coffee -wcb ./public/admin/*/*.coffee &
 

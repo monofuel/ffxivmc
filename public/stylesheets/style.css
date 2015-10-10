@@ -1,22 +1,57 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+* {
+  margin: 0;
 }
 
-a {
-  color: #00B7FF;
+.list-element {
+  transition-timing-function: ease-in;
+  transition: up 2s;
 }
+
 .container {
   display: flex;
   width: 100%;
   align-content: center;
 }
+
+.row {
+  width: 100%;
+  align-content: center;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 30px;
+}
+
+.container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .fixed{
-    width: 800px;
+  width: 800px;
+}
+html,body {
+  height: 100%;
 }
 
 .wrapper {
-  flex-grow: 1;
-  padding-left: 1cm;
-  padding-right: 1cm;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -30px;
+}
+
+.jumbotron {
+  margin-bottom: 0px;
+  background-color: #313031;
+  color: #EEE1C5;
+  text-shadow: 1px 1px #605744;
+}
+.active {
+  color: #EEE1C5;
+}
+
+.footer, .push {
+  background-color: #D6D6D6;
+  height: 30px;
 }
