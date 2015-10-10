@@ -9,7 +9,7 @@ module.exports = (app) ->
   mongoose.connect(serverAddress)
   db = mongoose.connection
 
-  console.log('connected to db at serverAddress')
+  console.log('connected to db at ' + serverAddress)
 
 
   require('./routes/MarketOrder')(app)
