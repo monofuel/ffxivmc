@@ -5,7 +5,7 @@ displayError = (err) ->
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
     err + '</div>'
 
-refreshStaleItems = () ->
+refreshStaleItems = (interval) ->
   staleItemTable = document.getElementById("staleItemBody")
 
   #ignore if the page doesn't have a stale item list
@@ -24,12 +24,13 @@ refreshStaleItems = () ->
         table += "<tr><td>" + item + "</td></tr>"
       )
     staleItemTable.innerHTML = table
-    setTimeout(refreshStaleItems,10000)
+
+    setTimeout(refreshStaleItems,10000) if interval
     )
 
 
 
-refreshProfitableItems = () ->
+refreshProfitableItems = (interval) ->
   profitItemTable = document.getElementById("ProfitableItemBody")
 
   #ignore if the page doesn't have a profitable items list
@@ -59,10 +60,10 @@ refreshProfitableItems = () ->
       )
     profitItemTable.innerHTML = table
 
-    setTimeout(refreshProfitableItems,10000)
+    setTimeout(refreshProfitableItems,10000) if interval
     )
 
 window.onload = () ->
 
-  refreshStaleItems()
-  refreshProfitableItems()
+  refreshStaleItems(true)
+  refreshProfitableItems(true)
