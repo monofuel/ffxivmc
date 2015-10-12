@@ -52,12 +52,16 @@ RecipeSchema = new mongoose.Schema({
 GatherSchema = new mongoose.Schema({
   id: { type: Number, required: true, index: true, unique: true }
   gather_class: String
+  stars: Number
+  level: Number
   min_gathering: Number
   min_perception: Number
   locations: [
     x: Number
     y: Number
+    zone: String
     area: String
+    level: Number
     ]
   unspoiled: Boolean
   time: {

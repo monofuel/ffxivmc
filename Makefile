@@ -1,7 +1,7 @@
 all: core_js models_js routes_js util_js public_js
 
 start: all
-	supervisor -w .,./models/,./routes/,./util/ node app.js
+	supervisor -w ./core.js,./app.js,./models/,./routes/,./util/ node app.js
 
 watch: watch_core_js watch_routes_js watch_models_js watch_util_js watch_public_js
 

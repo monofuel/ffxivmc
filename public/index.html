@@ -52,7 +52,7 @@
       </nav>
       <div class="container-fluid">
         <div id="errorAlert" >
-          
+
         </div>
         <div class="row">
           <div class="col-sm-12">
@@ -75,6 +75,7 @@
             <div class="well">
               <p>
               Items That Need Fresh Data
+              <span id="staleItemCounter" class="label label-info">0</span>
               <button id="staleItemButton" style="float: right;" type="button" class="btn btn-primary" onclick="refreshStaleItems()">Refresh</button>
               </p>
               <!-- TODO spiffy animations -->
@@ -105,6 +106,7 @@
                     <th>Market Price</th>
                     <th>Crafting Estimate</th>
                     <th>Source</th>
+                    <th>Info</th>
                   </tr>
                 </thead>
                 <tbody id="ProfitableItemBody">
@@ -112,6 +114,24 @@
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="itemModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 id="itemModalTitle" class="modal-title">Item</h4>
+          </div>
+          <div id="itemModalBody" class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

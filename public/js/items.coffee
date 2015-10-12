@@ -1,3 +1,6 @@
+#string function pair for filling item data
+itemModalInfo = {}
+
 displayError = (err) ->
   alertBubble = document.getElementById("errorAlert")
 
@@ -14,18 +17,21 @@ refreshStaleItems = (interval) ->
 
   #retrieve desired items and display some of them
   $.get("/desiredorders", (data) ->
+    staleCounter = document.getElementById("staleItemCounter")
+
     if (data.length < 0)
       return displayError("Could not retrieve item information")
 
-    displayList = data.slice(0,25)
+    displayList = data.slice(0,100)
 
     table = ""
     displayList.forEach((item) ->
         table += "<tr><td>" + item + "</td></tr>"
       )
     staleItemTable.innerHTML = table
+    staleCounter.innerHTML = data.length
 
-    setTimeout(refreshStaleItems,10000) if interval
+    setTimeout(refreshStaleItems,5000) if interval
     )
 
 
@@ -38,15 +44,14 @@ refreshProfitableItems = (interval) ->
     return
 
   $.get("/bestcrafts", (data) ->
-    if (data.length < 0)
-      return displayError("Could not retrieve item information")
+    if (data.length == 0)
+      return displayError("Item crafting prices are being generated, please wait.")
 
     #displayList = data.slice(0,25)
     displayList = data
 
     table = ""
     displayList.forEach((item) ->
-      table += "<a onclick='itemInfo()'>"
       table += "<tr>"
       table += "<td>" + item.name + "</td>"
       table += "<td>" + (item.market_sell_price - item.actual_price.price) + "</td>"
@@ -54,13 +59,46 @@ refreshProfitableItems = (interval) ->
       table += "<td>" + item.actual_price.price + "</td>"
       table += "<td>" + item.actual_price.source + "</td>"
 
-      table += "</tr>"
 
-      table += "</a>"
+
+      showInfo = () ->
+        console.log("show Info clicked")
+        itemModal = "<div>"
+        itemModal += '<p>Source: ' + item.actual_price.source + '</p>'
+        itemModal += '<p>Individual Price: ' + item.actual_price.price + '</p>'
+        itemModal += '<p>Last known price on market: ' + item.market_sell_price + '</p>'
+        itemModal += '<h2>Materials Required:</h2>'
+        itemModal += '<table class="table table-condensed table-striped">'
+        itemModal += '<thead>'
+        itemModal += '<tr>'
+        itemModal += '<th>Item</th>'
+        itemModal += '<th>Quantity</th>'
+        itemModal += '<th>Best Source</th>'
+        itemModal += '<th>Price</th>'
+        itemModal += '</thead>'
+        itemModal += '<tbody>'
+        item.mats.forEach((mat) ->
+          itemModal += "<tr>"
+          itemModal += "<td>" + mat.name + "</td>"
+          itemModal += "<td>" + mat.quantity + "</td>"
+          itemModal += "<td>" + mat.actual_price.source + "</td>"
+          itemModal += "<td>" + mat.actual_price.price + "</td>"
+          itemModal += "</tr>"
+          )
+        itemModal += '</body>'
+        itemModal += '</table>'
+        itemModal += "</div>"
+
+        document.getElementById("itemModalTitle").innerHTML = item.name
+        document.getElementById("itemModalBody").innerHTML = itemModal
+
+      itemModalInfo[item.name] = showInfo
+      table += '<td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#itemModal" onclick="itemModalInfo[\'' + item.name + '\']()">Info</button></td>'
+      table += "</tr>"
       )
     profitItemTable.innerHTML = table
 
-    setTimeout(refreshProfitableItems,10000) if interval
+    setTimeout(refreshProfitableItems,5000) if interval
     )
 
 window.onload = () ->

@@ -12,6 +12,9 @@ lastBestCrafts = []
 recalcCrafts = false
 calculatingCrafts = false
 
+desiredItems = []
+recalcDesired = false
+
 get_item_id = (name) ->
   for item in itemIds
     if (item == undefined)
@@ -169,14 +172,25 @@ calculate_price = (id,callback) ->
         result_info.mats = async_result
         result_info.actual_price.source = "crafted"
         #console.log("async result: " +JSON.stringify(async_result))
+        unknownMat = false
         async_result.forEach((mat_result) ->
           if (mat_result == undefined)
             return
+
           result.craft_mats.forEach((mat) ->
             if (mat_result.id == mat.item)
+              if (mat_result.actual_price.price == 0)
+                unknownMat = true
+
               result_info.actual_price.price += (mat_result.actual_price.price * mat.quantity)
+              mat_result.quantity =  mat.quantity
+
+              if (mat.quantity == undefined)
+                unknownMat = true
             )
           )
+        if (unknownMat)
+          result_info.actual_price.price = 0
         callback(err,result_info)
         )
       )
@@ -236,6 +250,7 @@ module.exports = (app) ->
         console.log(err)
         return next(err)
       recalcCrafts = true
+      recalcDesired = true
     )
 
     console.log("added new item: " + List.item + " with"
@@ -299,6 +314,16 @@ module.exports = (app) ->
 
   app.route('/desiredorders')
   .get((req, res, next) ->
+    if (recalcDesired == false && desiredItems.length > 0)
+      console.log("sending last cached desired crafts")
+      res.status(200)
+      return res.send(desiredItems)
+
+    recalcDesired = false
+    console.log("recalculating desired crafts")
+
+
+
     fetch_item_list((itemArray) ->
       itemIds = itemArray
       #items in recipes not in database
@@ -327,6 +352,7 @@ module.exports = (app) ->
               )
             res.status(200)
             res.send(ItemNames)
+            desiredItems = ItemNames
             )
           )
         )
@@ -341,7 +367,7 @@ module.exports = (app) ->
       if (lastBestCrafts.length == 0)
         console.log("still calculating, sending empty array")
         res.status(200)
-        return res.send("[]")
+        return res.send(new Array())
       else
         console.log("sending last cached crafts")
         res.status(200)
