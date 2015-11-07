@@ -2,6 +2,7 @@
 mongoose = require('mongoose')
 MarketList = mongoose.model('MarketOrderList')
 Item = mongoose.model('Item')
+Gather = mongoose.model('Gather')
 Recipe = mongoose.model('Recipe')
 Vendor = mongoose.model('Vendor')
 async = require('async')
@@ -14,6 +15,9 @@ calculatingCrafts = false
 
 desiredItems = []
 recalcDesired = false
+
+gatheredItems = []
+recalcGathered = false
 
 get_item_id = (name) ->
   for item in itemIds
@@ -58,7 +62,7 @@ fetch_item_price = (id,callback) ->
           return
 
         result.sort((a,b) ->
-          return a.timestamp - b.timestamp
+          return b.timestamp - a.timestamp
           )
 
         final_order_list = new Array()
@@ -66,7 +70,7 @@ fetch_item_price = (id,callback) ->
         latest_timestamp = result[0].timestamp
         for i in [0..result.length-1]
 
-          if (result[i].timestamp - latest_timestamp > - 7)
+          if (result[i].timestamp - latest_timestamp > - 10)
             result[i].orders.forEach((order) ->
               final_order_list.push(order)
               )
@@ -117,7 +121,7 @@ calculate_price = (id,callback) ->
       return callback("No market data found")
 
     result.sort((a,b) ->
-      return a.timestamp - b.timestamp
+      return b.timestamp - a.timestamp
       )
 
     final_order_list = new Array()
@@ -125,7 +129,7 @@ calculate_price = (id,callback) ->
     latest_timestamp = result[0].timestamp
     for i in [0..result.length-1]
 
-      if (result[i].timestamp - latest_timestamp > - 7)
+      if (result[i].timestamp - latest_timestamp > - 10)
         result[i].orders.forEach((order) ->
           final_order_list.push(order)
           )
@@ -251,6 +255,7 @@ module.exports = (app) ->
         return next(err)
       recalcCrafts = true
       recalcDesired = true
+      recalcGathered = true
     )
 
     console.log("added new item: " + List.item + " with"
@@ -382,6 +387,8 @@ module.exports = (app) ->
     recalcCrafts = false
     calculatingCrafts = true
     console.log("recalculating crafts")
+    res.status(200)
+    res.send(new Array())
 
     fetch_item_list((itemArray) ->
       itemIds = itemArray
@@ -421,15 +428,68 @@ module.exports = (app) ->
 
         async.series(async_all_recipes,(err) ->
           recipe_price_list.sort((a,b) ->
-            a_profit = a.actual_price.price - a.market_sell_price
-            b_profit = b.actual_price.price - b.market_sell_price
+            a_profit = a.actual_price.price / a.market_sell_price
+            b_profit = b.actual_price.price / b.market_sell_price
             return a_profit - b_profit
             )
           lastBestCrafts = recipe_price_list
           calculatingCrafts = false
           console.log("crafts calculated")
-          res.status(200)
-          res.send(recipe_price_list.slice(0,100))
+
+          )
+        )
+      )
+    )
+  app.route("/gatherorders")
+  .get((req,res,next) ->
+    if (recalcGathered == false && gatheredItems.length > 0)
+      console.log("sending last cached gathered items")
+      res.status(200)
+      return res.send(gatheredItems)
+
+    recalcGathered = false
+    console.log("recalculating gathered items")
+
+
+
+    fetch_item_list((itemArray) ->
+      itemIds = itemArray
+
+      gather_price_list = new Array()
+      Gather.find((err,gatherItems) ->
+        async_all_gathers = new Array()
+        gatherItems.forEach((gather) ->
+          async_all_gathers.push( (cb) ->
+            calculate_price(gather.id,(err,result_info) ->
+              if (result_info == null || result_info == undefined)
+                return cb()
+              #console.log(recipe.id + "crafting info: " + result_info)
+              if (result_info.actual_price.price == 0 ||
+                result_info.market_sell_price == 0)
+                  return cb()
+
+              gather_price_list.push(
+                name: result_info.name
+                id: result_info.id
+                market_sell_price: result_info.market_sell_price
+                gather_class: gather.gather_class
+                level: gather.level
+                location: gather.locations
+                stars: gather.stars
+
+                )
+              cb()
+              )
+            )
+          )
+        async.series(async_all_gathers,(err) ->
+          gather_price_list.sort((a,b) ->
+
+            return b.market_sell_price - a.market_sell_price
+            )
+          gatheredItems = gather_price_list
+          console.log("Gathers calculated")
+
           )
         )
       )
